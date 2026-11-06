@@ -24,7 +24,11 @@
         <input id="url-input" type="url" placeholder="วางลิงก์ YouTube, TikTok, Instagram, X, Reddit..." autocomplete="off" spellcheck="false" />
         <button id="analyze-btn" class="primary">วิเคราะห์</button>
       </div>
-      <div id="status" class="status"></div>
+      <div id="progress" class="progress" style="display:none">
+        <div class="bar"></div>
+        <div class="label"></div>
+      </div>
+      <div id="status" class="status info"></div>
     </section>
 
     <section id="result" class="result hidden">
@@ -42,13 +46,8 @@
     </section>
 
     <section class="info">
-      <h3>วิธีใช้</h3>
-      <ol>
-        <li>วางลิงก์ในช่องด้านบน</li>
-        <li>กด วิเคราะห์</li>
-        <li>กด ดาวน์โหลด เมื่อพร้อม</li>
-      </ol>
-      <p class="note">ใช้ได้กับ YouTube, TikTok, Instagram, X/Twitter, Reddit, Pinterest และอื่น ๆ (เนื้อหาสาธารณะเท่านั้น)</p>
+      <h3>ข้อจำกัด</h3>
+      <p>ใช้ได้กับเนื้อหาสาธารณะเท่านั้น. ไม่รองรับคลิปส่วนตัว, สตอรี่, หรือมี DRM. ถ้าวิเคราะห์ไม่ผ่าน ได้เพราะแหล่งถูกบล็อกซั่วคราว หรือลิงก์ไม่รองรับ.</p>
     </section>
   </main>
 
