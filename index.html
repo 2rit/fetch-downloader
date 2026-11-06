@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FETCH — Universal Media Downloader</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <span class="logo">FETCH</span>
+      <span class="tag">ดาวน์โหลดสื่อจากลิงก์</span>
+    </div>
+    <nav>
+      <button id="theme-toggle">Theme</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="input-section">
+      <div class="url-box">
+        <input id="url-input" type="url" placeholder="วางลิงก์ YouTube, TikTok, Instagram, X, Reddit..." autocomplete="off" spellcheck="false" />
+        <button id="analyze-btn" class="primary">วิเคราะห์</button>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
+
+    <section id="result" class="result hidden">
+      <div class="preview">
+        <img id="thumb" alt="Preview" />
+        <div class="meta">
+          <h2 id="title"></h2>
+          <p id="engine-info"></p>
+        </div>
+      </div>
+      <div id="formats" class="formats"></div>
+      <div class="actions">
+        <a id="download-link" class="primary" href="#" target="_blank" rel="noopener">ดาวน์โหลด</a>
+      </div>
+    </section>
+
+    <section class="info">
+      <h3>วิธีใช้</h3>
+      <ol>
+        <li>วางลิงก์ในช่องด้านบน</li>
+        <li>กด วิเคราะห์</li>
+        <li>กด ดาวน์โหลด เมื่อพร้อม</li>
+      </ol>
+      <p class="note">ใช้ได้กับ YouTube, TikTok, Instagram, X/Twitter, Reddit, Pinterest และอื่น ๆ (เนื้อหาสาธารณะเท่านั้น)</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>FETCH · ใช้ Cobalt API สาธารณะ · เคารพลิขสิทธิ์</p>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
