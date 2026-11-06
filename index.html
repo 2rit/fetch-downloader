@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>FETCH — Universal Media Downloader</title>
+<title>FETCH — ดาวน์โหลดสื่อ</title>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,7 +11,6 @@
   <header>
     <div class="brand">
       <span class="logo">FETCH</span>
-      <span class="tag">ดาวน์โหลดสื่อจากลิงก์</span>
     </div>
     <nav>
       <button id="theme-toggle">Theme</button>
@@ -19,42 +18,56 @@
   </header>
 
   <main>
-    <section class="input-section">
-      <div class="url-box">
-        <input id="url-input" type="url" placeholder="วางลิงก์ YouTube, TikTok, Instagram, X, Reddit..." autocomplete="off" spellcheck="false" />
-        <button id="analyze-btn" class="primary">วิเคราะห์</button>
-      </div>
-      <div id="progress" class="progress" style="display:none">
-        <div class="bar"></div>
-        <div class="label"></div>
-      </div>
-      <div id="status" class="status info"></div>
+    <section class="hero">
+      <h1>ดาวน์โหลดสื่อจากลิงก์</h1>
+      <p class="lead">เวอร์ชันนี้ใช้ได้กับเนื้อหาสาธารณะเท่านั้น (YouTube, TikTok, Instagram, X, Reddit)</p>
     </section>
 
-    <section id="result" class="result hidden">
-      <div class="preview">
-        <img id="thumb" alt="Preview" />
-        <div class="meta">
-          <h2 id="title"></h2>
-          <p id="engine-info"></p>
-        </div>
+    <section class="status-card">
+      <h2>สถานะปัจจุบัน</h2>
+      <p>แหล่ง Cobalt สาธารณะต้องการ JWT auth จึงเรียกจากเบราว์เซอร์ไม่ได้โดยตรง. ใช้เว็บของ Cobalt โดยตรงแทน.</p>
+      <a class="primary big" href="https://cobalt.tools" target="_blank" rel="noopener">เปิด cobalt.tools</a>
+    </section>
+
+    <section class="info-grid">
+      <div class="card">
+        <h3>ใช้ได้</h3>
+        <ul>
+          <li>YouTube, TikTok, Instagram</li>
+          <li>X/Twitter, Reddit, Pinterest</li>
+          <li>เนื้อหาสาธารณะเท่านั้น</li>
+        </ul>
       </div>
-      <div id="formats" class="formats"></div>
-      <div class="actions">
-        <a id="download-link" class="primary" href="#" target="_blank" rel="noopener">ดาวน์โหลด</a>
+      <div class="card">
+        <h3>ไม่รองรับ</h3>
+        <ul>
+          <li>คลิปส่วนตัว / สตอรี่</li>
+          <li>เนื้อหาที่มี DRM</li>
+          <li>บัญชีส่วนตัว</li>
+        </ul>
       </div>
     </section>
 
-    <section class="info">
-      <h3>ข้อจำกัด</h3>
-      <p>ใช้ได้กับเนื้อหาสาธารณะเท่านั้น. ไม่รองรับคลิปส่วนตัว, สตอรี่, หรือมี DRM. ถ้าวิเคราะห์ไม่ผ่าน ได้เพราะแหล่งถูกบล็อกซั่วคราว หรือลิงก์ไม่รองรับ.</p>
+    <section class="selfhost">
+      <h2>อยากรันเอง</h2>
+      <p>ถ้ามีคอมพิวเตอร์หรือ VPS สามารถรันเวอร์ชันเต็ม (yt-dlp + Deno) ได้จาก repo</p>
+      <a href="https://github.com/2rit/fetch-downloader" target="_blank" rel="noopener">ดูโค้ดบน GitHub</a>
     </section>
   </main>
 
   <footer>
-    <p>FETCH · ใช้ Cobalt API สาธารณะ · เคารพลิขสิทธิ์</p>
+    <p>FETCH · เคารพลิขสิทธิ์ · ใช้เนื้อหาสาธารณะเท่านั้น</p>
   </footer>
 </div>
-<script src="app.js"></script>
+<script>
+document.getElementById("theme-toggle").onclick = () => {
+  const cur = document.documentElement.getAttribute("data-theme") || "dark";
+  const next = cur === "light" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("fetch-theme", next);
+};
+const saved = localStorage.getItem("fetch-theme");
+if (saved) document.documentElement.setAttribute("data-theme", saved);
+</script>
 </body>
 </html>
