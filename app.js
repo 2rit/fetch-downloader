@@ -30,7 +30,7 @@ function setProgress(pct, text) {
   progressEl.querySelector(".label").textContent = text || "";
 }
 
-async function tryInstance(instance, url, timeoutMs = 12000) {
+async function tryInstance(instance, url, timeoutMs = 7000) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -40,18 +40,13 @@ async function tryInstance(instance, url, timeoutMs = 12000) {
         "Accept": "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ url, videoQuality: "1080", audioFormat: "mp3" }),
+      body: JSON.stringify({ url, videoQuality: "720" }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error("HTTP " + res.status + (text ? ": " + text.slice(0, 80) : ""));
-    }
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-    if (data.status === "error") {
-      throw new Error(data.error?.code || data.error?.context || "error");
-    }
+    if (data.status === "error") throw new Error(data.error?.code || "error");
     return data;
   } catch (e) {
     clearTimeout(timeout);
@@ -59,46 +54,46 @@ async function tryInstance(instance, url, timeoutMs = 12000) {
   }
 }
 
+async function raceInstances(url) {
+  const promises = INSTANCES.map((inst, i) =>
+    tryInstance(inst, url).then(data => ({ data, inst, i })).catch(err => {
+      throw { err, inst, i };
+    })
+  );
+
+  const results = await Promise.allSettled(promises);
+  for (const r of results) {
+    if (r.status === "fulfilled") return r.value;
+  }
+  const firstReject = results.find(r => r.status === "rejected");
+  throw firstReject?.reason || new Error("all failed");
+}
+
 async function analyze() {
   const url = urlInput.value.trim();
   if (!url) return setStatus("กรุณาวางลิงก์", "error");
   if (!/^https?:\/\//i.test(url)) return setStatus("ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://", "error");
 
-  setStatus("กำลังวิเคราะห์...", "info");
-  setProgress(5, "เริ่มต้น");
+  setStatus("กำลังลองพร้อมกัน...", "info");
+  setProgress(20, "ส่งคำขอ");
   resultEl.classList.add("hidden");
   analyzeBtn.disabled = true;
   analyzeBtn.textContent = "กำลังทำ...";
 
-  let lastError = null;
-  const total = INSTANCES.length;
-
-  for (let i = 0; i < total; i++) {
-    const inst = INSTANCES[i];
-    const pct = Math.round(((i) / total) * 80) + 10;
-    setProgress(pct, "ลอง " + inst.name + " (" + (i + 1) + "/" + total + ")");
-    setStatus("กำลังลอง " + inst.name + "...", "info");
-
-    try {
-      const data = await tryInstance(inst, url);
-      setProgress(100, "สำเร็จ");
-      renderResult(data, url, inst.name);
-      setStatus("พร้อมดาวน์โหลด", "ok");
-      analyzeBtn.disabled = false;
-      analyzeBtn.textContent = "วิเคราะห์";
-      setTimeout(() => setProgress(0), 800);
-      return;
-    } catch (e) {
-      lastError = e;
-      setStatus(inst.name + " ไม่ผ่าน: " + (e.message || "ข้อผิดพลาด"), "warn");
-      await new Promise(r => setTimeout(r, 400));
-    }
+  try {
+    const { data, inst } = await raceInstances(url);
+    setProgress(100, "สำเร็จ");
+    renderResult(data, url, inst.name);
+    setStatus("พร้อมดาวน์โหลด", "ok");
+  } catch (e) {
+    setProgress(0);
+    const msg = e?.err?.message || e?.message || "ไม่สามารถวิเคราะห์ได้";
+    setStatus("ไม่ผ่าน: " + msg + ". ลิงก์อาจเป็นคลิปส่วนตัวหรือมี DRM", "error");
   }
 
-  setProgress(0);
-  setStatus("ไม่สามารถวิเคราะห์ได้จากทุกแหล่ง. ลิงก์อาจเป็นคลิปส่วนตัวหรือมี DRM. ลองใหม่ภายหลัง", "error");
   analyzeBtn.disabled = false;
   analyzeBtn.textContent = "วิเคราะห์";
+  setTimeout(() => setProgress(0), 600);
 }
 
 function renderResult(data, originalUrl, source) {
@@ -122,12 +117,11 @@ function renderResult(data, originalUrl, source) {
     div.textContent = data.filename || "ไฟล์";
     formatsEl.appendChild(div);
   } else if (data.status === "picker" && Array.isArray(data.picker)) {
-    data.picker.slice(0, 8).forEach((item, i) => {
+    data.picker.slice(0, 6).forEach((item, i) => {
       const div = document.createElement("div");
       div.className = "format-item";
       div.textContent = item.thumb || ("รายการ " + (i + 1));
       if (item.url) {
-        div.style.cursor = "pointer";
         div.onclick = () => {
           downloadLink.href = item.url;
           downloadLink.textContent = "ดาวน์โหลด";
