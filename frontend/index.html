@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FETCH — Universal Media Downloader</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="brand">
+      <span class="logo">FETCH</span>
+      <span class="tag">Universal Media Downloader</span>
+    </div>
+    <nav>
+      <button id="theme-toggle" aria-label="Toggle theme">Theme</button>
+      <button id="clear-history" aria-label="Clear history">Clear</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="input-section">
+      <div class="url-box">
+        <input id="url-input" type="url" placeholder="Paste YouTube, TikTok, Instagram, Pinterest, X, Reddit…" autocomplete="off" spellcheck="false" />
+        <button id="analyze-btn" class="primary">Analyze</button>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
+
+    <section id="result" class="result hidden">
+      <div class="preview">
+        <img id="thumb" alt="Preview" />
+        <div class="meta">
+          <h2 id="title"></h2>
+          <p id="engine-info"></p>
+          <p id="extra-meta"></p>
+        </div>
+      </div>
+      <div id="formats" class="formats"></div>
+      <div class="actions">
+        <button id="download-btn" class="primary">Download Selected</button>
+        <button id="download-best" class="secondary">Best Quality</button>
+      </div>
+    </section>
+
+    <section class="queue">
+      <h3>Recent Downloads</h3>
+      <ul id="history"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>yt-dlp + Deno · gallery-dl · Cobalt (optional). Public content only. Respect copyrights.</p>
+  </footer>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>
