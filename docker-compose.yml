@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  fetch:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DOWNLOAD_DIR=/app/downloads
+      - COBALT_API_URL=${COBALT_API_URL:-}
+      - MAX_FILE_SIZE_MB=500
+    volumes:
+      - ./downloads:/app/downloads
+    restart: unless-stopped
